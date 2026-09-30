@@ -33,3 +33,25 @@ resources:
         project: olist-lakehouse
         environment: ${bundle.target}
         cost-control: serverless-job-compute
+    olist_silver_orders:
+      name: olist-silver-orders
+      max_concurrent_runs: 1
+      tasks:
+        - task_key: transform_orders
+          spark_python_task:
+            python_file: ../../pipelines/src/silver/run_orders_silver.py
+            parameters:
+              - --catalog
+              - "{{job.parameters.catalog}}"
+          environment_key: serverless_default
+      environments:
+        - environment_key: serverless_default
+          spec:
+            environment_version: "2"
+      parameters:
+        - name: catalog
+          default: olist_dev
+      tags:
+        project: olist-lakehouse
+        environment: ${bundle.target}
+        cost-control: serverless-job-compute
