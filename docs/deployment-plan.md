@@ -5,7 +5,7 @@
 Terraform will create exactly the following after a separately approved `terraform apply`:
 
 1. One VPC, one public subnet, route table, internet gateway, and security groups.
-2. One customer-managed KMS key (rotation enabled) for S3, RDS, and Parameter Store encryption.
+2. One customer-managed KMS key (rotation enabled) created in a separately approved root bootstrap step. Terraform receives only its ARN and cannot create arbitrary KMS keys.
 3. One versioned S3 lake bucket with `landing/`, `bronze/`, `silver/`, `gold/`, `checkpoints/`, `audit/`, and `artifacts/` prefixes.
 4. One single-AZ `db.t4g.micro` RDS PostgreSQL database with logical replication enabled.
 5. One `t3.medium` EC2 instance with 30 GB gp3 disk. Cloud-init installs Kafka, Kafka Connect/Debezium, Karapace, and the generator as direct system services.
@@ -26,3 +26,7 @@ No MSK, MSK Connect, AWS DMS, NAT Gateway, ECS/Fargate, EKS, Lambda, VPC interfa
 ## Approval rule
 
 Running `terraform fmt`, `validate`, or `plan` is safe and does not create cloud infrastructure. Do not run `apply` or `destroy` without user confirmation.
+
+## Identity bootstrap
+
+`scripts/bootstrap_kms_and_role.sh` is the only root-authenticated mutation. It creates one KMS key plus the one-hour deployer role, then prints the KMS key ARN. All subsequent Terraform runs must assume that role and pass the printed ARN as `kms_key_arn`.

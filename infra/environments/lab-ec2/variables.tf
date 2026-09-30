@@ -29,3 +29,7 @@ variable "ec2_instance_type" {
   type    = string
   default = "t3.medium"
 }
+variable "kms_key_arn" {
+  description = "One-time root-bootstrap KMS key ARN. Terraform never creates KMS keys."
+  type        = string
+}

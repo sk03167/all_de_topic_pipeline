@@ -4,3 +4,5 @@ owner            = "your-name"
 allowed_cidr     = "203.0.113.10/32"
 budget_email     = "you@example.com"
 budget_limit_usd = 15
+# Create this key in the dedicated root bootstrap stage; do not commit its ARN if you prefer local-only config.
+kms_key_arn      = "arn:aws:kms:ap-south-1:123456789012:key/replace-me"

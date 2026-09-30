@@ -1,8 +1,9 @@
 variable "project_name" { type = string }
 variable "kms_key_arn" { type = string }
+variable "bucket_name" { type = string }
 
 resource "aws_s3_bucket" "lake" {
-  bucket_prefix = "${var.project_name}-lake-"
+  bucket = var.bucket_name
   force_destroy = true # Intentional for short-lived training data only.
 }
 
