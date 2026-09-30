@@ -8,6 +8,9 @@ readonly DEBEZIUM_VERSION=2.7.3.Final
 readonly KARAPACE_VENV=/opt/karapace-venv
 readonly KARAPACE_VERSION=3.7.1
 
+# `envsubst` resolves the connector template immediately before registration;
+# install it here as well so this script is safe on an already-bootstrapped host.
+sudo dnf install -y gettext
 sudo mkdir -p "$CONNECT_HOME/plugins" /etc/kafka-connect /etc/karapace
 sudo curl --fail --location "https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/${DEBEZIUM_VERSION}/debezium-connector-postgres-${DEBEZIUM_VERSION}-plugin.tar.gz" --output /tmp/debezium.tar.gz
 sudo tar -xzf /tmp/debezium.tar.gz -C "$CONNECT_HOME/plugins"

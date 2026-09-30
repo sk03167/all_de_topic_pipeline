@@ -10,7 +10,7 @@ exec > >(tee /var/log/olist-bootstrap.log | logger -t olist-bootstrap) 2>&1
 dnf install -y amazon-ssm-agent
 systemctl enable --now amazon-ssm-agent
 dnf update -y
-dnf install -y java-17-amazon-corretto-headless python3-pip postgresql15 awscli curl tar
+dnf install -y java-17-amazon-corretto-headless python3-pip postgresql15 awscli curl tar gettext
 
 id kafka &>/dev/null || useradd --system --home /opt/kafka --shell /sbin/nologin kafka
 
