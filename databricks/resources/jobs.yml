@@ -7,7 +7,14 @@ resources:
         - task_key: ingest_olist_files
           spark_python_task:
             # This resource file is nested under databricks/resources/.
-            python_file: ../../pipelines/src/bronze/ingest_olist_files.py
+            python_file: ../../pipelines/src/bronze/run_olist_batch.py
+            parameters:
+              - --catalog
+              - "{{job.parameters.catalog}}"
+              - --source-path
+              - "{{job.parameters.source_path}}"
+              - --state-path
+              - "{{job.parameters.state_path}}"
           # This workspace allows serverless jobs only. Python tasks need an
           # explicit execution environment when they do not use a cluster.
           environment_key: serverless_default
@@ -15,6 +22,13 @@ resources:
         - environment_key: serverless_default
           spec:
             environment_version: "2"
+      parameters:
+        - name: catalog
+          default: olist_dev
+        - name: source_path
+          default: /Volumes/olist_dev/bronze/landing/olist_orders
+        - name: state_path
+          default: /Volumes/olist_dev/audit/pipeline_state
       tags:
         project: olist-lakehouse
         environment: ${bundle.target}
