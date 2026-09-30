@@ -43,13 +43,13 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-sudo tee /etc/systemd/system/karapace.service >/dev/null <<'EOF'
+sudo tee /etc/systemd/system/karapace.service >/dev/null <<EOF
 [Unit]
 Description=Karapace Schema Registry
 After=kafka.service
 [Service]
 User=kafka
-ExecStart=${KARAPACE_VENV}/bin/karapace_all /etc/karapace/config.json
+ExecStart=${KARAPACE_VENV}/bin/karapace /etc/karapace/config.json
 Restart=always
 [Install]
 WantedBy=multi-user.target
