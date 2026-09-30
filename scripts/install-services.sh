@@ -6,6 +6,7 @@ readonly KAFKA_HOME=/opt/kafka
 readonly CONNECT_HOME=/opt/kafka-connect
 readonly DEBEZIUM_VERSION=2.7.3.Final
 readonly KARAPACE_VENV=/opt/karapace-venv
+readonly KARAPACE_VERSION=3.7.1
 
 sudo mkdir -p "$CONNECT_HOME/plugins" /etc/kafka-connect /etc/karapace
 sudo curl --fail --location "https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/${DEBEZIUM_VERSION}/debezium-connector-postgres-${DEBEZIUM_VERSION}-plugin.tar.gz" --output /tmp/debezium.tar.gz
@@ -14,7 +15,7 @@ sudo tar -xzf /tmp/debezium.tar.gz -C "$CONNECT_HOME/plugins"
 # application upgrade can never break operating-system package management.
 sudo python3 -m venv "$KARAPACE_VENV"
 sudo "$KARAPACE_VENV/bin/pip" install --upgrade pip
-sudo "$KARAPACE_VENV/bin/pip" install 'karapace==3.15.0'
+sudo "$KARAPACE_VENV/bin/pip" install "git+https://github.com/Aiven-Open/karapace.git@${KARAPACE_VERSION}"
 sudo cp kafka-connect/karapace-config.json /etc/karapace/config.json
 sudo cp "$KAFKA_HOME/config/connect-distributed.properties" /etc/kafka-connect/connect-distributed.properties
 sudo tee -a /etc/kafka-connect/connect-distributed.properties >/dev/null <<EOF
