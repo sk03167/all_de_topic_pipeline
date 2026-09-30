@@ -30,3 +30,7 @@ Running `terraform fmt`, `validate`, or `plan` is safe and does not create cloud
 ## Identity bootstrap
 
 `scripts/bootstrap_kms_and_role.sh` is the only root-authenticated mutation. It creates one KMS key plus the one-hour deployer role, then prints the KMS key ARN. All subsequent Terraform runs must assume that role and pass the printed ARN as `kms_key_arn`.
+
+## Remote state bootstrap
+
+`scripts/bootstrap_terraform_backend.sh` creates the separate versioned, KMS-encrypted `olist-lakehouse-tfstate-<account>-ap-south-1` bucket and updates the deployer role policy with access only to `lab-ec2/terraform.tfstate` and its native `.tflock` object. The lab data bucket is never used for Terraform state.

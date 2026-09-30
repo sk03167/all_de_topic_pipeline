@@ -20,6 +20,18 @@
       "Resource": ["arn:aws:s3:::${LAB_BUCKET_NAME}", "arn:aws:s3:::${LAB_BUCKET_NAME}/*"]
     },
     {
+      "Sid": "OnlyTheTerraformStateBucket",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket", "s3:GetBucketLocation", "s3:GetBucketVersioning", "s3:GetEncryptionConfiguration"],
+      "Resource": "arn:aws:s3:::${STATE_BUCKET_NAME}"
+    },
+    {
+      "Sid": "OnlyTerraformStateAndLockObjects",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+      "Resource": "arn:aws:s3:::${STATE_BUCKET_NAME}/lab-ec2/terraform.tfstate*"
+    },
+    {
       "Sid": "CreateOnlyTheNamedLakeBucket",
       "Effect": "Allow",
       "Action": "s3:CreateBucket",
