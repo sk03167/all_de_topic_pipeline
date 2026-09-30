@@ -15,11 +15,11 @@ dnf install -y java-17-amazon-corretto-headless python3-pip postgresql15 awscli 
 id kafka &>/dev/null || useradd --system --home /opt/kafka --shell /sbin/nologin kafka
 
 # Kafka runs in KRaft mode: no ZooKeeper is required for a one-node learning lab.
-KAFKA_VERSION="3.8.0"
-# Old Kafka releases live in the Apache archive.  Bound the transfer so a
-# transient mirror failure fails bootstrap visibly instead of blocking cloud-init.
+# Use a current release mirror rather than the slow historical archive. Bound
+# the transfer so a transient mirror failure fails bootstrap visibly.
+KAFKA_VERSION="4.3.1"
 curl --fail --location --connect-timeout 20 --max-time 900 --retry 2 \
-  "https://archive.apache.org/dist/kafka/$${KAFKA_VERSION}/kafka_2.13-$${KAFKA_VERSION}.tgz" \
+  "https://downloads.apache.org/kafka/$${KAFKA_VERSION}/kafka_2.13-$${KAFKA_VERSION}.tgz" \
   --output /tmp/kafka.tgz
 tar -xzf /tmp/kafka.tgz -C /opt
 ln -sfn "/opt/kafka_2.13-$${KAFKA_VERSION}" /opt/kafka
