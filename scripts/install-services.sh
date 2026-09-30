@@ -7,6 +7,7 @@ readonly CONNECT_HOME=/opt/kafka-connect
 readonly DEBEZIUM_VERSION=2.7.3.Final
 readonly KARAPACE_VENV=/opt/karapace-venv
 readonly KARAPACE_VERSION=3.7.1
+readonly KARAPACE_REQUIREMENTS_URL="https://raw.githubusercontent.com/Aiven-Open/karapace/${KARAPACE_VERSION}/requirements/requirements.txt"
 
 # `envsubst` resolves the connector template immediately before registration;
 # install it here as well so this script is safe on an already-bootstrapped host.
@@ -18,7 +19,10 @@ sudo tar -xzf /tmp/debezium.tar.gz -C "$CONNECT_HOME/plugins"
 # application upgrade can never break operating-system package management.
 sudo python3 -m venv "$KARAPACE_VENV"
 sudo "$KARAPACE_VENV/bin/pip" install --upgrade pip
-sudo "$KARAPACE_VENV/bin/pip" install "git+https://github.com/Aiven-Open/karapace.git@${KARAPACE_VERSION}"
+# The release's setup metadata omits several runtime dependencies. Its locked
+# requirements file also pins Aiven's compatible Kafka client fork.
+sudo "$KARAPACE_VENV/bin/pip" install --requirement "$KARAPACE_REQUIREMENTS_URL"
+sudo "$KARAPACE_VENV/bin/pip" install --no-deps "git+https://github.com/Aiven-Open/karapace.git@${KARAPACE_VERSION}"
 sudo cp kafka-connect/karapace-config.json /etc/karapace/config.json
 sudo cp "$KAFKA_HOME/config/connect-distributed.properties" /etc/kafka-connect/connect-distributed.properties
 sudo tee -a /etc/kafka-connect/connect-distributed.properties >/dev/null <<EOF
@@ -49,7 +53,9 @@ Description=Karapace Schema Registry
 After=kafka.service
 [Service]
 User=kafka
-ExecStart=${KARAPACE_VENV}/bin/karapace /etc/karapace/config.json
+# Amazon Linux's Python 3.9 does not load ``importlib.util`` when importing
+# ``importlib`` alone; Karapace 3.7.1 expects it to exist. Preload it here.
+ExecStart=${KARAPACE_VENV}/bin/python -c 'import importlib.util; from karapace.karapace_all import main; main()' /etc/karapace/config.json
 Restart=always
 [Install]
 WantedBy=multi-user.target

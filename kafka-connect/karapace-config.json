@@ -4,6 +4,7 @@
   "port": 8081,
   "group_id": "olist-karapace-registry",
   "topic_name": "_schemas",
+  "karapace_registry": true,
   "master_eligibility": true,
   "compatibility": "BACKWARD"
 }
