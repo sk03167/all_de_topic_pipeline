@@ -1,0 +1,14 @@
+{
+  "type": "record",
+  "name": "ClickstreamEvent",
+  "namespace": "com.olist.marketplace",
+  "fields": [
+    {"name": "event_id", "type": "string"},
+    {"name": "event_ts", "type": "string"},
+    {"name": "session_id", "type": "string"},
+    {"name": "customer_id", "type": ["null", "string"], "default": null},
+    {"name": "event_name", "type": "string"},
+    {"name": "product_id", "type": ["null", "string"], "default": null},
+    {"name": "page_url", "type": "string"}
+  ]
+}

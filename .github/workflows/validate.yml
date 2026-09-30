@@ -1,0 +1,16 @@
+name: validate
+on: [pull_request, push]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: terraform -chdir=infra/environments/lab-ec2 init -backend=false
+      - run: terraform -chdir=infra/environments/lab-ec2 validate
+      - run: terraform -chdir=infra/environments/lab-ec2 fmt -recursive -check
+      - run: python -m compileall services/generator/src pipelines/src

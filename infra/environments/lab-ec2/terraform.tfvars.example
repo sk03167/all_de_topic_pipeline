@@ -1,0 +1,6 @@
+aws_region       = "ap-south-1"
+project_name     = "olist-lakehouse-lab"
+owner            = "your-name"
+allowed_cidr     = "203.0.113.10/32"
+budget_email     = "you@example.com"
+budget_limit_usd = 15

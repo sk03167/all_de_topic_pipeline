@@ -1,0 +1,22 @@
+resources:
+  jobs:
+    olist_batch_ingestion:
+      name: olist-batch-ingestion
+      max_concurrent_runs: 1
+      tasks:
+        - task_key: ingest_olist_files
+          spark_python_task:
+            python_file: ../pipelines/src/bronze/ingest_olist_files.py
+          job_cluster_key: small_job_cluster
+      job_clusters:
+        - job_cluster_key: small_job_cluster
+          new_cluster:
+            spark_version: 16.4.x-scala2.12
+            node_type_id: m5d.large
+            num_workers: 1
+            autotermination_minutes: 10
+            data_security_mode: USER_ISOLATION
+      tags:
+        project: olist-lakehouse
+        environment: ${bundle.target}
+        cost-control: ephemeral-job-compute

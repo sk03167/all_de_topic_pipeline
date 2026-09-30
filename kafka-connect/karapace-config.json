@@ -1,0 +1,9 @@
+{
+  "bootstrap_uri": "localhost:9092",
+  "host": "0.0.0.0",
+  "port": 8081,
+  "group_id": "olist-karapace-registry",
+  "topic_name": "_schemas",
+  "master_eligibility": true,
+  "compatibility": "BACKWARD"
+}

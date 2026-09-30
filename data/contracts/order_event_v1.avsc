@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "name": "OrderEvent",
+  "namespace": "com.olist.marketplace",
+  "doc": "Version 1 order lifecycle event. New optional fields may be added with defaults for backward compatibility.",
+  "fields": [
+    {"name": "event_id", "type": "string"},
+    {"name": "event_type", "type": "string"},
+    {"name": "event_ts", "type": "string"},
+    {"name": "order_id", "type": "string"},
+    {"name": "customer_id", "type": "string"},
+    {"name": "order_status", "type": "string"},
+    {"name": "total_amount", "type": "double"},
+    {"name": "source", "type": "string", "default": "order-generator"}
+  ]
+}
