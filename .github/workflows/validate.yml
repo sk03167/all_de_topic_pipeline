@@ -3,14 +3,18 @@ on: [pull_request, push]
 permissions:
   contents: read
 jobs:
-  validate:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
-      - run: terraform -chdir=infra/environments/lab-ec2 init -backend=false
-      - run: terraform -chdir=infra/environments/lab-ec2 validate
-      - run: terraform -chdir=infra/environments/lab-ec2 fmt -recursive -check
-      - run: python -m compileall services/generator/src pipelines/src
+      - name: Install project and development dependencies
+        run: make setup
+      - name: Run linters
+        run: make lint
+      - name: Run tests
+        run: make test
+      - name: Run infrastructure validation
+        run: make validate

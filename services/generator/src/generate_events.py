@@ -14,9 +14,14 @@ import random
 import time
 import uuid
 from datetime import UTC, datetime
+from typing import Any
 
-import psycopg
-from confluent_kafka import Producer
+try:  # Optional locally; installed on the EC2 generator runtime.
+    import psycopg
+    from confluent_kafka import Producer
+except ImportError:  # pragma: no cover - exercised by dependency setup, not business logic.
+    psycopg = None
+    Producer = Any
 
 
 def utc_now() -> str:
@@ -75,6 +80,8 @@ def main() -> None:
     parser.add_argument("--interval-seconds", type=float, default=0.5)
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
+    if psycopg is None:
+        raise RuntimeError("Install generator dependencies with: pip install '.[generator]'")
     random.seed(args.seed)
     producer = Producer({"bootstrap.servers": args.kafka_bootstrap, "acks": "all", "enable.idempotence": True})
     with psycopg.connect(args.postgres_dsn) as connection:

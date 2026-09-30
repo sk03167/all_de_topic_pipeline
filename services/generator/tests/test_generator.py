@@ -10,7 +10,7 @@ class GeneratorTests(unittest.TestCase):
         producer = Mock()
         emit_clickstream(producer, "customer-1")
         kwargs = producer.produce.call_args.kwargs
-        self.assertEqual(kwargs["topic"], "olist.clickstream.v1")
+        self.assertEqual(producer.produce.call_args.args[0], "olist.clickstream.v1")
         self.assertIn("customer-1", kwargs["value"])
 
 
