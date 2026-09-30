@@ -8,14 +8,10 @@ development catalog, and a production catalog.
 from __future__ import annotations
 
 import argparse
-import sys
-from pathlib import Path
 
-# A Databricks bundle syncs the whole `pipelines/src` tree.  Add that tree when
-# this script is invoked directly by a Spark Python task instead of as a wheel.
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-from bronze.ingest_olist_files import read_olist_csv, write_bronze
+# Databricks executes a Python task with this script's directory on sys.path,
+# but does not set __file__. Import the colocated ingestion module directly.
+from ingest_olist_files import read_olist_csv, write_bronze
 
 
 def parse_args() -> argparse.Namespace:

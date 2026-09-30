@@ -16,7 +16,9 @@ def read_olist_csv(spark, source_path: str, schema_location: str) -> DataFrame:
         .option("cloudFiles.inferColumnTypes", "false")
         .load(source_path)
         .withColumn("_ingested_at", F.current_timestamp())
-        .withColumn("_source_file", F.input_file_name())
+        # Unity Catalog serverless compute exposes file lineage through the
+        # metadata column; input_file_name() is not supported there.
+        .withColumn("_source_file", F.col("_metadata.file_path"))
     )
 
 

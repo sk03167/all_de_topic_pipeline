@@ -26,7 +26,7 @@ resources:
         - name: catalog
           default: olist_dev
         - name: source_path
-          default: /Volumes/olist_dev/bronze/landing/olist_orders
+          default: /Volumes/olist_dev/bronze/landing
         - name: state_path
           default: /Volumes/olist_dev/audit/pipeline_state
       tags:
