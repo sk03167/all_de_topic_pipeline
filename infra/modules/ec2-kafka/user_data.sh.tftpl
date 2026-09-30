@@ -30,11 +30,11 @@ cat >/etc/kafka/server.properties <<'EOF'
 process.roles=broker,controller
 node.id=1
 controller.quorum.voters=1@localhost:9093
-listeners=PLAINTEXT://0.0.0.0:9092,CONTROLLER://localhost:9093
-advertised.listeners=PLAINTEXT://REPLACE_PUBLIC_DNS:9092
+listeners=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:9094,CONTROLLER://localhost:9093
+advertised.listeners=INTERNAL://REPLACE_PRIVATE_IP:9092,EXTERNAL://REPLACE_PUBLIC_DNS:9094
 controller.listener.names=CONTROLLER
-inter.broker.listener.name=PLAINTEXT
-listener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+inter.broker.listener.name=INTERNAL
+listener.security.protocol.map=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
 log.dirs=/var/lib/kafka
 num.partitions=3
 auto.create.topics.enable=false
@@ -45,7 +45,10 @@ IMDS_TOKEN=$$(curl -fsS -X PUT http://169.254.169.254/latest/api/token \
   -H 'X-aws-ec2-metadata-token-ttl-seconds: 21600' || true)
 PUBLIC_DNS=$$(curl -fsS -H "X-aws-ec2-metadata-token: $${IMDS_TOKEN}" \
   http://169.254.169.254/latest/meta-data/public-hostname || true)
+PRIVATE_IP=$$(curl -fsS -H "X-aws-ec2-metadata-token: $${IMDS_TOKEN}" \
+  http://169.254.169.254/latest/meta-data/local-ipv4 || true)
 sed -i "s/REPLACE_PUBLIC_DNS/$${PUBLIC_DNS:-localhost}/" /etc/kafka/server.properties
+sed -i "s/REPLACE_PRIVATE_IP/$${PRIVATE_IP:-127.0.0.1}/" /etc/kafka/server.properties
 CLUSTER_ID=$$(/opt/kafka/bin/kafka-storage.sh random-uuid)
 /opt/kafka/bin/kafka-storage.sh format -t "$${CLUSTER_ID}" -c /etc/kafka/server.properties
 

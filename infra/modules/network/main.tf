@@ -57,11 +57,20 @@ resource "aws_security_group" "ec2" {
     cidr_blocks = [var.allowed_cidr]
   }
   ingress {
-    description = "Kafka only from lab operator"
+    description = "Kafka external listener only from lab operator"
+    from_port   = 9094
+    to_port     = 9094
+    protocol    = "tcp"
+    cidr_blocks = [var.allowed_cidr]
+  }
+  # Kafka Connect on this host reconnects to the broker's advertised internal
+  # listener. Permit that host-to-itself traffic without opening Kafka wider.
+  ingress {
+    description = "Kafka internal listener for the lab host"
     from_port   = 9092
     to_port     = 9092
     protocol    = "tcp"
-    cidr_blocks = [var.allowed_cidr]
+    self        = true
   }
   ingress {
     description = "Schema Registry only from lab operator"
