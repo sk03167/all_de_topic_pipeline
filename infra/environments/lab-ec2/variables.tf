@@ -27,7 +27,9 @@ variable "db_username" {
 }
 variable "ec2_instance_type" {
   type    = string
-  default = "t3.medium"
+  # This account enforces Free Tier eligibility.  Two vCPUs / 2 GiB is the
+  # smallest practical size for a short-lived Kafka + Connect + registry lab.
+  default = "t3.small"
 }
 variable "kms_key_arn" {
   description = "One-time root-bootstrap KMS key ARN. Terraform never creates KMS keys."

@@ -33,6 +33,9 @@ resource "aws_iam_role_policy" "instance" {
     Statement = [
       { Effect = "Allow", Action = ["s3:GetObject", "s3:PutObject", "s3:ListBucket"], Resource = ["arn:aws:s3:::${var.lake_bucket_name}", "arn:aws:s3:::${var.lake_bucket_name}/*"] },
       { Effect = "Allow", Action = ["ssm:GetParameter"], Resource = var.database_secret_arn },
+      # Amazon Linux includes SSM Agent. These allow Session Manager / Run Command
+      # without opening SSH or managing a key pair for this short-lived lab host.
+      { Effect = "Allow", Action = ["ssm:UpdateInstanceInformation", "ssmmessages:CreateControlChannel", "ssmmessages:CreateDataChannel", "ssmmessages:OpenControlChannel", "ssmmessages:OpenDataChannel", "ec2messages:GetEndpoint", "ec2messages:GetMessages", "ec2messages:SendReply", "ec2messages:AcknowledgeMessage", "ec2messages:DeleteMessage", "ec2messages:FailMessage"], Resource = "*" },
       { Effect = "Allow", Action = ["kms:Decrypt", "kms:GenerateDataKey"], Resource = var.kms_key_arn },
       { Effect = "Allow", Action = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"], Resource = "*" }
     ]

@@ -5,6 +5,10 @@
 set -euo pipefail
 exec > >(tee /var/log/olist-bootstrap.log | logger -t olist-bootstrap) 2>&1
 
+# Be explicit instead of relying on an AMI default: this is the only remote
+# administration path for the lab, so no SSH key pair is required.
+dnf install -y amazon-ssm-agent
+systemctl enable --now amazon-ssm-agent
 dnf update -y
 dnf install -y java-17-amazon-corretto-headless python3-pip postgresql15 awscli wget tar
 

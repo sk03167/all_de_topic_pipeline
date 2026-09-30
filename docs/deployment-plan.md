@@ -8,7 +8,7 @@ Terraform will create exactly the following after a separately approved `terrafo
 2. One customer-managed KMS key (rotation enabled) created in a separately approved root bootstrap step. Terraform receives only its ARN and cannot create arbitrary KMS keys.
 3. One versioned S3 lake bucket with `landing/`, `bronze/`, `silver/`, `gold/`, `checkpoints/`, `audit/`, and `artifacts/` prefixes.
 4. One single-AZ `db.t4g.micro` RDS PostgreSQL database with logical replication enabled.
-5. One `t3.medium` EC2 instance with 30 GB gp3 disk. Cloud-init installs Kafka, Kafka Connect/Debezium, Karapace, and the generator as direct system services.
+5. One `t3.small` EC2 instance with 30 GB gp3 disk. It is free-tier eligible in this account and is the smallest practical size for the short-lived lab. Cloud-init installs Kafka, Kafka Connect/Debezium, Karapace, and the generator as direct system services.
 6. Two encrypted SSM parameters: database endpoint metadata and generated database password.
 7. CloudWatch log groups and two AWS Budget email thresholds.
 
