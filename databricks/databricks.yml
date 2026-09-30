@@ -4,23 +4,24 @@ bundle:
 include:
   - resources/*.yml
 
+# Pipeline sources live beside the bundle directory. Include both roots in the
+# sync boundary so job tasks can package those sources deterministically.
+sync:
+  paths:
+    - .
+    - ../pipelines
+
 targets:
   dev:
     mode: development
     default: true
-    workspace:
-      host: ${var.workspace_host}
     variables:
       catalog: olist_dev
   prod:
     mode: production
-    workspace:
-      host: ${var.workspace_host}
     variables:
       catalog: olist_prod
 
 variables:
-  workspace_host:
-    description: Existing Databricks workspace URL. Keep auth in the CLI profile, not this file.
   catalog:
     description: Unity Catalog catalog created by the platform administrator.

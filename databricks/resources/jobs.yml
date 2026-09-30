@@ -6,17 +6,16 @@ resources:
       tasks:
         - task_key: ingest_olist_files
           spark_python_task:
-            python_file: ../pipelines/src/bronze/ingest_olist_files.py
-          job_cluster_key: small_job_cluster
-      job_clusters:
-        - job_cluster_key: small_job_cluster
-          new_cluster:
-            spark_version: 16.4.x-scala2.12
-            node_type_id: m5d.large
-            num_workers: 1
-            autotermination_minutes: 10
-            data_security_mode: USER_ISOLATION
+            # This resource file is nested under databricks/resources/.
+            python_file: ../../pipelines/src/bronze/ingest_olist_files.py
+          # This workspace allows serverless jobs only. Python tasks need an
+          # explicit execution environment when they do not use a cluster.
+          environment_key: serverless_default
+      environments:
+        - environment_key: serverless_default
+          spec:
+            environment_version: "2"
       tags:
         project: olist-lakehouse
         environment: ${bundle.target}
-        cost-control: ephemeral-job-compute
+        cost-control: serverless-job-compute

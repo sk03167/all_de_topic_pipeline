@@ -10,7 +10,11 @@
 
 ```bash
 cd databricks
-databricks bundle validate --var workspace_host=https://YOUR_WORKSPACE
+# Keep the workspace URL and token outside source control. The CLI reads them
+# for this terminal session; the bundle never persists either value.
+export DATABRICKS_HOST=https://YOUR_WORKSPACE
+export DATABRICKS_TOKEN=YOUR_SHORT_LIVED_TOKEN
+databricks bundle validate --target dev
 ```
 
 Validation does not deploy jobs. Bundle deployment and any Databricks compute use require separate approval.
